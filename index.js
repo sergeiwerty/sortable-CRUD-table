@@ -28,12 +28,8 @@ function createDB() {
     }
   })
 
-  // database.transaction(function (tx) {
-  //   tx.executeSql('SELECT * from dataTable ORDER BY sumInfo DESC')
-  // })
-
   document.getElementById('table').innerHTML =
-    '<th id="id">Id</th> <th class="data">Дата</th> <th class="supplier">Наименование поставщика</th> <th class="warehouse">Склад приёмки</th> <th class="product-name">Наименование товара</th> <th class="quantity">Количество</th> <th class="sum">Сумма</th>'
+    '<th id="id">Id</th> <th id="date">Дата</th> <th id="supplierName">Наименование поставщика</th> <th id="warehouseInfo">Склад приёмки</th> <th id="productInfo">Наименование товара</th> <th id="quantityInfo">Количество</th> <th id="sumInfo">Сумма</th>'
 
   database.transaction(function (tx) {
     tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
@@ -109,6 +105,18 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   row.appendChild(sumCell)
 
   document.getElementById('table').appendChild(row)
+
+  setTimeout(() => {
+    // const idColumn = document.getElementById('id')
+    table.onclick = function (event) {
+      let target = event.target
+      if (target.tagName !== 'TH') return
+      // console.log(target.getAttribute('id'))
+      // target.addEventListener('click', sortByColumn)
+      console.log(event.target.getAttribute('id'))
+      sortByColumn(event.target.getAttribute('id'))
+    }
+  }, 10)
 }
 
 // const sortById = () => {
@@ -164,7 +172,7 @@ function replacementRow(
     const quantityCell = document.getElementById(`quantityCell-${counter}`)
     const sumCell = document.getElementById(`sumCell-${counter}`)
 
-    console.log(sumCell)
+    // console.log(sumCell)
 
     idCell.textContent = id
     datesCell.textContent = dates
@@ -174,7 +182,7 @@ function replacementRow(
     quantityCell.textContent = quantity
     sumCell.textContent = sum
 
-    console.log(sumCell)
+    // console.log(sumCell)
   }, 200)
 
   // console.log(dates, supplier)
@@ -200,17 +208,18 @@ function replacementRow(
 
 let condition = true
 
-const tbl = document.querySelector('table')
-tbl.setAttribute('class', 'smth')
+// const tbl = document.querySelector('table')
+// tbl.setAttribute('class', 'smth')
 
-const sortByColumn = () => {
-  const value = 'id'
+const sortByColumn = (idAttribute) => {
+  // const value = event.target.getAttribute('id')
+
   condition = !condition
   let selectText
   if (condition) {
-    selectText = `SELECT * from dataTable ORDER BY ${value} ASC`
+    selectText = `SELECT * from dataTable ORDER BY ${idAttribute} ASC`
   } else {
-    selectText = `SELECT * from dataTable ORDER BY ${value}  DESC`
+    selectText = `SELECT * from dataTable ORDER BY ${idAttribute}  DESC`
   }
   database.transaction(function (tx) {
     tx.executeSql(`${selectText}`, [], function (tx, result) {
@@ -232,10 +241,6 @@ const sortByColumn = () => {
   })
 }
 
-// function sortById() {
-//   console.log('bang')
-// }
-
 // const dataColumn = document.querySelector('.data')
 // const supplierColumn = document.querySelector('.supplier')
 // const warehouseColumn = document.querySelector('.warehouse')
@@ -245,36 +250,16 @@ const sortByColumn = () => {
 
 // setTimeout(() => {
 //   const idColumn = document.getElementById('id')
-//   idColumn
-//   idColumn.addEventListener('click', sortByColumn)
+//   console.log(idColumn)
+//   table.onclick = function (event) {
+//     let target = event.target
+//     if (target.tagName !== 'TH') return
+//     // console.log(target.getAttribute('id'))
+//     console.log(target)
+
+//     idColumn.addEventListener('click', sortByColumn)
+//   }
 // }, 10)
-
-setTimeout(() => {
-  const idColumn = document.getElementById('id')
-  idColumn
-  idColumn.addEventListener('click', sortByColumn)
-}, 10)
-
-// var db = openDatabase('db', '1.0', 'Ixora DB', 100000)
-//   document.getElementById('table').innerHTML =
-//     '<th>Id</th> <th>Дата</th> <th>Наименование поставщика</th> <th>Склад приёмки</th> <th>Наименование товара</th> <th>Количество</th> <th>Сумма</th>'
-//   database.transaction(function (tx) {
-//     tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
-//       for (let i = 0; i < result.rows.length; i += 1) {
-//         let item = result.rows.item(i)
-//         outRow(
-//           item.id,
-//           item.date,
-//           item.supplierName,
-//           item.warehouseInfo,
-//           item.productInfo,
-//           item.quantityInfo,
-//           item.sumInfo
-//         )
-//       }
-//     })
-//   })
-// }
 
 createDB()
 
