@@ -2,6 +2,7 @@ import { tableData } from './data.js'
 const { dates, supplier, warehouse, productName, quantity, sum } = tableData
 // const database = openDatabase('ixoraDB', '0.1', 'Ixora test database', 100000)
 const database = openDatabase('db', '1.0', 'Ixora DB', 1000000)
+
 function createDB() {
   // table creation
   database.transaction(function (tx) {
@@ -47,27 +48,6 @@ function createDB() {
       }
     })
   })
-
-  // database.transaction(function (tx) {
-  //   tx.executeSql(
-  //     'SELECT * from dataTable ORDER BY productInfo ASC',
-  //     [],
-  //     function (tx, result) {
-  //       for (let i = 0; i < result.rows.length; i += 1) {
-  //         let item = result.rows.item(i)
-  //         outRow(
-  //           item.id,
-  //           item.date,
-  //           item.supplierName,
-  //           item.warehouseInfo,
-  //           item.productInfo,
-  //           item.quantityInfo,
-  //           item.sumInfo
-  //         )
-  //       }
-  //     }
-  //   )
-  // })
 }
 
 function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
@@ -79,6 +59,7 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   const productNameCell = document.createElement('td')
   const quantityCell = document.createElement('td')
   const sumCell = document.createElement('td')
+  const copyBtn = document.createElement('button')
 
   idCell.setAttribute('id', `idCell-${id}`)
   datesCell.setAttribute('id', `datesCell-${id}`)
@@ -87,6 +68,8 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   productNameCell.setAttribute('id', `productNameCell-${id}`)
   quantityCell.setAttribute('id', `quantityCell-${id}`)
   sumCell.setAttribute('id', `sumCell-${id}`)
+  copyBtn.setAttribute('class', 'copyBtn')
+  // copyBtn.setAttribute('onclick', 'copyFn()')
 
   idCell.textContent = id
   datesCell.textContent = dates
@@ -95,6 +78,10 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   productNameCell.textContent = productName
   quantityCell.textContent = quantity
   sumCell.textContent = sum
+  copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+  <path pointer-events="fill" d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+</svg>`
 
   row.appendChild(idCell)
   row.appendChild(datesCell)
@@ -103,51 +90,31 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   row.appendChild(productNameCell)
   row.appendChild(quantityCell)
   row.appendChild(sumCell)
+  row.appendChild(copyBtn)
 
   document.getElementById('table').appendChild(row)
 
   setTimeout(() => {
-    // const idColumn = document.getElementById('id')
     table.onclick = function (event) {
       let target = event.target
       if (target.tagName !== 'TH') return
-      // console.log(target.getAttribute('id'))
-      // target.addEventListener('click', sortByColumn)
-      console.log(event.target.getAttribute('id'))
+      // console.log(event.target.getAttribute('id'))
       sortByColumn(event.target.getAttribute('id'))
     }
+    const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
+      item.onclick = function (event) {
+        const elements = Array.from(event.target.parentElement.children)
+        const c = (acc, node) => {
+          acc.push(node.textContent)
+          return acc
+        }
+        copyEntry(elements.reduce(c, []).slice(1, -1).join("', '"))
+      }
+    })
   }, 10)
 }
 
-// const sortById = () => {
-//   database.transaction(function (tx) {
-//     tx.executeSql(
-//       'SELECT * from dataTable ORDER BY id DESC',
-//       [],
-//       function (tx, result) {
-//         for (let i = 0; i < result.rows.length; i += 1) {
-//           let item = result.rows.item(i)
-//           outRow(
-//             item.id,
-//             item.date,
-//             item.supplierName,
-//             item.warehouseInfo,
-//             item.productInfo,
-//             item.quantityInfo,
-//             item.sumInfo
-//           )
-//         }
-//       }
-//     )
-//   })
-// }
-
-// '<th id="id">Id</th> <th class="data">Дата</th> <th class="supplier">Наименование поставщика</th> <th class="warehouse">Склад приёмки</th> <th class="product-name">Наименование товара</th> <th class="quantity">Количество</th> <th class="sum">Сумма</th>'
-
 const table = document.getElementById('table')
-// const tada = () => {
-//   console.log(document.getElementById(`idCell-${1}`))
-// }
 
 function replacementRow(
   id,
@@ -160,8 +127,6 @@ function replacementRow(
   counter
 ) {
   setTimeout(() => {
-    // const bl = document.getElementById(`idCell-${1}`)
-    // console.log(bl)
     const idCell = document.getElementById(`idCell-${counter}`)
     const datesCell = document.getElementById(`datesCell-${counter}`)
     const supplierCell = document.getElementById(`supplierCell-${counter}`)
@@ -172,8 +137,6 @@ function replacementRow(
     const quantityCell = document.getElementById(`quantityCell-${counter}`)
     const sumCell = document.getElementById(`sumCell-${counter}`)
 
-    // console.log(sumCell)
-
     idCell.textContent = id
     datesCell.textContent = dates
     supplierCell.textContent = supplier
@@ -181,39 +144,12 @@ function replacementRow(
     productNameCell.textContent = productName
     quantityCell.textContent = quantity
     sumCell.textContent = sum
-
-    // console.log(sumCell)
   }, 200)
-
-  // console.log(dates, supplier)
-  // let i = 1
-  // const idCell = table.getElementById(`idCell-${i}`)
-  // const datesCell = table.getElementById(`datesCell-${i}`)
-  // const supplierCell = table.getElementById(`supplierCell-${i}`)
-  // const warehouseCell = table.getElementById(`warehouseCell-${i}`)
-  // const productNameCell = table.getElementById(`productNameCell-${i}`)
-  // const quantityCell = table.getElementById(`quantityCell-${i}`)
-  // const sumCell = table.getElementById(`sumCell-${i}`)
-
-  // row.appendChild(idCell)
-  // row.appendChild(datesCell)
-  // row.appendChild(supplierCell)
-  // row.appendChild(warehouseCell)
-  // row.appendChild(productNameCell)
-  // row.appendChild(quantityCell)
-  // row.appendChild(sumCell)
-
-  // document.getElementById('table').appendChild(row)
 }
 
 let condition = true
 
-// const tbl = document.querySelector('table')
-// tbl.setAttribute('class', 'smth')
-
 const sortByColumn = (idAttribute) => {
-  // const value = event.target.getAttribute('id')
-
   condition = !condition
   let selectText
   if (condition) {
@@ -241,40 +177,117 @@ const sortByColumn = (idAttribute) => {
   })
 }
 
-// const dataColumn = document.querySelector('.data')
-// const supplierColumn = document.querySelector('.supplier')
-// const warehouseColumn = document.querySelector('.warehouse')
-// const productColumn = document.querySelector('.product-name')
-// const quantityColumn = document.querySelector('.quantity')
-// const sumColumn = document.querySelector('.sum')
+const removeRows = () => {
+  const tableColl = table.getElementsByTagName('tr')
+  // console.log(tableColl.slice(1))
+  // console.log(tableColl.length)
+  // const collArray = Array.from(tableColl)
+  // console.log(collArray.length)
+  for (let i = tableColl.length - 1; i > 0; i -= 1) {
+    tableColl[1].parentNode.removeChild(tableColl[1])
+    console.log(tableColl)
+  }
+
+  console.log(tableColl)
+}
+
+const copyEntry = (string) => {
+  // ("'" + `${string}` + "'")
+  const newStr = "'" + `${string}` + "'"
+  console.log(typeof newStr)
+  console.log(newStr)
+
+  //   console.log(string.forEach((word) => {
+  // `'${word},'`
+  //   }))
+  // INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES (${newStr})
+  database.transaction(function (tx) {
+    tx.executeSql(
+      `INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES (${newStr})`
+      // 'SELECT DISTINCT date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo FROM dataTable',
+      // [],
+      // function (tx, result) {
+      //   for (let i = 0; i < result.rows.length; i += 1) {
+      //     let item = result.rows.item(i)
+      //     let index = i + 1
+      //     outRow(
+      //       item.id,
+      //       item.date,
+      //       item.supplierName,
+      //       item.warehouseInfo,
+      //       item.productInfo,
+      //       item.quantityInfo,
+      //       item.sumInfo,
+      //       index
+      //     )
+      //   }
+      // }
+    )
+  })
+  removeRows()
+
+  database.transaction(function (tx) {
+    tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
+      for (let i = 0; i < result.rows.length; i += 1) {
+        let item = result.rows.item(i)
+        outRow(
+          item.id,
+          item.date,
+          item.supplierName,
+          item.warehouseInfo,
+          item.productInfo,
+          item.quantityInfo,
+          item.sumInfo
+        )
+      }
+    })
+  })
+  // console.log(outRow)
+  // outRow()
+  // createDB()
+}
+
+// createDB()
+// copyEntry()
 
 // setTimeout(() => {
-//   const idColumn = document.getElementById('id')
-//   console.log(idColumn)
-//   table.onclick = function (event) {
-//     let target = event.target
-//     if (target.tagName !== 'TH') return
-//     // console.log(target.getAttribute('id'))
-//     console.log(target)
-
-//     idColumn.addEventListener('click', sortByColumn)
-//   }
-// }, 10)
-
-createDB()
-
-// console.log(createDB())
-
-// function DoSelect() {
-//   var db = openDatabase('db', '1.0', 'Ixora DB', 100000)
-//   document.getElementById('tabletable').innerHTML =
-//     '<th>Id</th> <th>Дата</th> <th>Наименование поставщика</th> <th>Склад приёмки</th> <th>Наименование товара</th> <th>Количество</th> <th>Сумма</th>'
-//   db.transaction(function (tx) {
-//     tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
-//       for (var i = 0; i < result.rows.length; i++) {
-//         var item = result.rows.item(i)
-//         OutRow(item.id, item.name, item.value)
+//   const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
+//     item.addEventListener('click', (cb) => {
+//       console.log(Array.from(event.target.parentElement.children))
+//       const elements = Array.from(event.target.parentElement.children)
+//       const c = (acc, node) => {
+//         // console.log(node.textContent)
+//         acc.push(node.textContent)
+//         return acc
 //       }
+//       console.log(elements.reduce(c, []).slice(1, -1).join(', '))
+//       copyEntry()
+//       // console.log(elements[1].textContent)
 //     })
 //   })
-// }
+// }, 200)
+
+// copyBtn.addEventListener
+
+// const createDbBtn = document.getElementById('createDbBtn')
+// setTimeout(
+//   // (createDbBtn.onclick = function () {
+//   //   // copyEntry()
+//   //   removeRows()
+//   //   // createDB()
+//   // }),
+//   (createDbBtn.onclick = createDB),
+//   200
+// )
+
+const initializeDB = (() => {
+  let executed = false
+  return () => {
+    if (!executed) {
+      executed = true
+      createDB()
+    }
+  }
+})()
+
+initializeDB()

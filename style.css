@@ -1,0 +1,9 @@
+svg {
+  width: 32px;
+  height: 32px;
+  /* pointer-events: none; */
+}
+
+svg {
+  pointer-events: none;
+}
