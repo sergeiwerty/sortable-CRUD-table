@@ -29,6 +29,10 @@ svg path {
   /* visibility: hidden; */
 }
 
+.btn-wrapper {
+  margin-bottom: 35px;
+}
+
 .btn-wrapper button {
   width: 45%;
 }

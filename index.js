@@ -2,6 +2,8 @@ import { tableData } from './data.js'
 
 const { dates, supplier, warehouse, productName, quantity, sum } = tableData
 
+const renderedTable = document.getElementById('table')
+
 const dateInput = document.getElementById('date-input')
 const supplierInput = document.getElementById('supplier-input')
 const warehouseInput = document.getElementById('warehouse-input')
@@ -17,7 +19,7 @@ const addEntryBtn = document.getElementById('addEntryBtn')
 
 const database = openDatabase('db', '1.0', 'Ixora DB', 1000000)
 
-let updatedId = null
+let updatedId
 
 function createDB() {
   // table creation
@@ -45,7 +47,7 @@ function createDB() {
     }
   })
 
-  document.getElementById('table').innerHTML =
+  renderedTable.innerHTML =
     '<th id="id">Id</th> <th id="date">Дата</th> <th id="supplierName">Наименование поставщика</th> <th id="warehouseInfo">Склад приёмки</th> <th id="productInfo">Наименование товара</th> <th id="quantityInfo">Количество</th> <th id="sumInfo">Сумма</th>'
 
   database.transaction(function (tx) {
@@ -67,8 +69,10 @@ function createDB() {
 }
 
 function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
+  console.log('hahahah')
   const row = document.createElement('tr')
   const idCell = document.createElement('td')
+  console.log(idCell)
   const datesCell = document.createElement('td')
   const supplierCell = document.createElement('td')
   const warehouseCell = document.createElement('td')
@@ -80,6 +84,7 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   const delBtn = document.createElement('button')
 
   idCell.setAttribute('id', `idCell-${id}`)
+  console.log(idCell)
   datesCell.setAttribute('id', `datesCell-${id}`)
   supplierCell.setAttribute('id', `supplierCell-${id}`)
   warehouseCell.setAttribute('id', `warehouseCell-${id}`)
@@ -89,8 +94,10 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   copyBtn.setAttribute('class', 'copyBtn')
   editBtn.setAttribute('class', 'editBtn')
   delBtn.setAttribute('class', 'delBtn')
+  delBtn.setAttribute('type', 'button')
 
   idCell.textContent = id
+  console.log(idCell.textContent)
   datesCell.textContent = dates
   supplierCell.textContent = supplier
   warehouseCell.textContent = warehouse
@@ -142,8 +149,6 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
     })
 
     addEntryBtn.onclick = function () {
-      // updateEntryBtn.classList.add('clicked')
-      // undoUpdateBtn.classList.add('clicked')
       addEntry()
     }
 
@@ -159,37 +164,36 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
       })
 
       item.addEventListener('click', () => {
-        // console.log(addEntryBtn.classList.contains('hide-btn'))
         addEntryBtn.classList.toggle('toggler')
         updateEntryBtn.classList.toggle('toggler')
-
-        // const updateEntryBtn = document.getElementById('updateEntryBtn')
-        // const undoUpdateBtn
-
-        // console.log(addEntryBtn.classList.contains('hide-wrapper'))
-        // btnWrapper.classList.toggle('hide-wrapper')
       })
-
-      //!!!!! item.onclick = function (event) {
-      //   const elements = Array.from(event.target.parentElement.children)
-      //   const c = (acc, node) => {
-      //     acc.push(node.textContent)
-      //     return acc
-      //   }
-      //   editEntry(elements.reduce(c, []).slice(1, -1))
-      // }
     })
 
-    // console.log(updateEntryBtn)
     updateEntryBtn.onclick = function () {
       updateEntry()
     }
 
-    // editBtn.forEach((item) => {
-    //   item.addEventListener('click', () => {
-    //     addEntryBtn.classList.add('hide-btn')
-    //   })
-    // })
+    const delBtn = document.querySelectorAll('.delBtn').forEach((item) => {
+      item.addEventListener('click', (event) => {
+        const elements = Array.from(event.target.parentElement.children)
+        const c = (acc, node) => {
+          acc.push(node.textContent)
+          return acc
+        }
+        updatedId = elements.reduce(c, [])[0]
+        console.log(updatedId)
+        // editEntry(elements.reduce(c, []).slice(1, -1))
+      })
+    })
+
+    const delEvent = document.querySelectorAll('.delBtn').forEach((item) => {
+      item.onclick = function () {
+        delEntry()
+      }
+    })
+    // delBtn.onclick = function () {
+    //   delEntry()
+    // }
   }, 10)
 }
 
@@ -207,6 +211,7 @@ function replacementRow(
 ) {
   setTimeout(() => {
     const idCell = document.getElementById(`idCell-${counter}`)
+    console.log(idCell)
     const datesCell = document.getElementById(`datesCell-${counter}`)
     const supplierCell = document.getElementById(`supplierCell-${counter}`)
     const warehouseCell = document.getElementById(`warehouseCell-${counter}`)
@@ -216,6 +221,7 @@ function replacementRow(
     const quantityCell = document.getElementById(`quantityCell-${counter}`)
     const sumCell = document.getElementById(`sumCell-${counter}`)
 
+    console.log(idCell.textContent)
     idCell.textContent = id
     datesCell.textContent = dates
     supplierCell.textContent = supplier
@@ -241,6 +247,7 @@ const sortByColumn = (idAttribute) => {
     tx.executeSql(`${selectText}`, [], function (tx, result) {
       for (let i = 0; i < result.rows.length; i += 1) {
         let item = result.rows.item(i)
+        console.log(item)
         let index = i + 1
         replacementRow(
           item.id,
@@ -261,15 +268,10 @@ const removeRows = () => {
   const tableColl = table.getElementsByTagName('tr')
   for (let i = tableColl.length - 1; i > 0; i -= 1) {
     tableColl[1].parentNode.removeChild(tableColl[1])
-    // console.log(tableColl)
   }
-
-  // console.log(tableColl)
 }
 
 const copyEntry = (string) => {
-  // ("'" + `${string}` + "'")
-
   const newStr = "'" + `${string}` + "'"
   database.transaction(function (tx) {
     console.log(newStr)
@@ -298,9 +300,7 @@ const copyEntry = (string) => {
 }
 
 const editEntry = (arr) => {
-  // console.log(string)
   dateInput.value = arr[0]
-  // console.log(dateInput.value)
   supplierInput.value = arr[1]
   warehouseInput.value = arr[2]
   productInput.value = arr[3]
@@ -308,8 +308,39 @@ const editEntry = (arr) => {
   sumInput.value = arr[5]
 }
 
-// const dateInput = document.getElementById('date-input')
-// console.log(dateInput.value)
+const delEntry = () => {
+  database.transaction(function (tx) {
+    console.log(`${updatedId}`)
+    tx.executeSql(`DELETE FROM dataTable WHERE id='${updatedId}'`)
+  })
+
+  removeRows()
+
+  database.transaction(function (tx) {
+    tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
+      console.log(result)
+
+      let length = result.rows.length
+
+      for (let i = 0; i < result.rows.length; i += 1) {
+        let item = result.rows.item(i)
+        console.log(length)
+
+        console.log(item)
+
+        outRow(
+          item.id,
+          item.date,
+          item.supplierName,
+          item.warehouseInfo,
+          item.productInfo,
+          item.quantityInfo,
+          item.sumInfo
+        )
+      }
+    })
+  })
+}
 
 const addEntry = () => {
   database.transaction(function (tx) {
@@ -373,47 +404,19 @@ const updateEntry = () => {
       }
     })
   })
+
+  function printData() {
+    var divToPrint = document.getElementById('printTable')
+    newWin = window.open('')
+    newWin.document.write(divToPrint.outerHTML)
+    newWin.print()
+    newWin.close()
+  }
+
+  $('button').on('click', function () {
+    printData()
+  })
 }
-///////////////////////////////////////
-
-// const updateEntry = () => {
-//   database.transaction(function (tx) {
-//     tx.executeSql(
-//       'UPDATE dataTable SET date=?, supplierName=?, warehouseInfo=?, productInfo=?, quantityInfo=?, sumInfo=? WHERE id=?',
-//       [
-//         `'${dateInput.value}', '${supplierInput.value}', '${warehouseInput.value}', '${productInput.value}', '${quantityInput.value}', '${sumInput.value}', '${updatedId}') `,
-//       ]
-//     )
-//   })
-//   console.log('чтд')
-// }
-//
-//
-//
-
-// ('${dateInput.value}', '${supplierInput.value}', '${warehouseInput.value}', '${productInput.value}', '${quantityInput.value}', '${sumInput.value}')`
-
-// btn_update.click(() => {
-//   db.transaction((tx) => {
-//     var sql = 'UPDATE items SET productname=?,price=? WHERE id=?'
-
-//     tx.executeSql(
-//       sql,
-//       [product_name.val(), price.val(), p_id],
-//       () => {
-//         alert('Row Updated')
-//       },
-//       (tx, err) => {
-//         alert('Failed to update\n' + err.message)
-//       }
-//     )
-//   })
-//   btn_update.hide()
-//   btn_read.show()
-//   btn_cancel.hide()
-//   fetchData()
-// })
-//////////////////
 
 const initializeDB = (() => {
   let executed = false
