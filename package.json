@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "This is a demo project with basic functionality supporting adding, copying, deliting, editing data table entries. Alos implemented sorting by columns. As database used web SQL",
   "main": "index.js",
+
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+     "deploy": "npm run build && gh-pages -d dist -b master"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sergeiwerty/sortable-CRUD-table.git"
@@ -15,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/sergeiwerty/sortable-CRUD-table/issues"
   },
-  "homepage": "https://github.com/sergeiwerty/sortable-CRUD-table#readme"
+  "homepage": "https://github.com/sergeiwerty/sortable-CRUD-table#readme",
+  "devDependencies": {
+    "gh-pages": "^3.1.0"
+  }
 }

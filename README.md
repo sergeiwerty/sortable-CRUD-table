@@ -1,6 +1,6 @@
 # **Vanilla JS table project with CRUD functions and sorting**
 
-### [View deployment]()
+### [View deployment](https://sergeiwerty.github.io/sortable-CRUD-table/)
 
 ## Description
 
