@@ -49,3 +49,7 @@ svg path {
   /* display: flex;
   justify-content: space-between; */
 }
+
+.hideBtn {
+  display: none;
+}

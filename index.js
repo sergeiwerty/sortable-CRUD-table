@@ -13,7 +13,7 @@ const sumInput = document.getElementById('sum-input')
 
 const btnWrapper = document.querySelector('.btn-wrapper')
 const updateEntryBtn = document.getElementById('updateEntryBtn')
-const undoUpdateBtn = document.getElementById('undoUpdateBtn')
+const printBtn = document.getElementById('printBtn')
 
 const addEntryBtn = document.getElementById('addEntryBtn')
 
@@ -191,9 +191,10 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
         delEntry()
       }
     })
-    // delBtn.onclick = function () {
-    //   delEntry()
-    // }
+
+    printBtn.onclick = function () {
+      printData()
+    }
   }, 10)
 }
 
@@ -405,17 +406,39 @@ const updateEntry = () => {
     })
   })
 
-  function printData() {
-    var divToPrint = document.getElementById('printTable')
-    newWin = window.open('')
-    newWin.document.write(divToPrint.outerHTML)
+  // $('button').on('click', function () {
+  //   printData()
+  // })
+}
+
+const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
+  item.onclick = function (event) {
+    const elements = Array.from(event.target.parentElement.children)
+    console.log(elements)
+    const c = (acc, node) => {
+      acc.push(node.textContent)
+      return acc
+    }
+    copyEntry(elements.reduce(c, []).slice(1, -3).join("', '"))
+  }
+})
+
+function printData() {
+  document.querySelectorAll('.copyBtn').forEach((item) => {
+    item.classList.add('hideBtn')
+  })
+
+  // addEntryBtn.classList.add('hideBtn')
+  setTimeout(() => {
+    const newWin = window.open('')
+    newWin.document.write(renderedTable.outerHTML)
     newWin.print()
     newWin.close()
-  }
-
-  $('button').on('click', function () {
-    printData()
-  })
+  }, 20)
+  // const newWin = window.open('')
+  // newWin.document.write(renderedTable.outerHTML)
+  // newWin.print()
+  // newWin.close()
 }
 
 const initializeDB = (() => {
