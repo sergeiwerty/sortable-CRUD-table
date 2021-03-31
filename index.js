@@ -2,6 +2,7 @@ import { tableData } from './data.js'
 
 const { dates, supplier, warehouse, productName, quantity, sum } = tableData
 
+// VARIABLES INITIALIZATION
 const renderedTable = document.getElementById('table')
 
 const dateInput = document.getElementById('date-input')
@@ -17,20 +18,20 @@ const printBtn = document.getElementById('printBtn')
 
 const addEntryBtn = document.getElementById('addEntryBtn')
 
-const database = openDatabase('db', '1.0', 'Ixora DB', 1000000)
-
 let updatedId
 
+// DATABASE INITIALIZATION
+const database = openDatabase('db', '1.0', 'Ixora DB', 1000000)
+
+// DATABAZE TABLE INITIALIZATION
 function createDB() {
-  // table creation
   database.transaction(function (tx) {
     tx.executeSql(
       'CREATE TABLE IF NOT EXISTS dataTable (id integer primary key autoincrement, date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo)'
     )
   })
 
-  // add data
-
+  // SET TABLE DATA
   database.transaction(function (tx) {
     for (let i = 0; i < dates.length; i += 1) {
       tx.executeSql(
@@ -47,9 +48,9 @@ function createDB() {
     }
   })
 
+  // PAGE TABLE CREATION
   renderedTable.innerHTML =
     '<th id="id">Id</th> <th id="date">Дата</th> <th id="supplierName">Наименование поставщика</th> <th id="warehouseInfo">Склад приёмки</th> <th id="productInfo">Наименование товара</th> <th id="quantityInfo">Количество</th> <th id="sumInfo">Сумма</th>'
-
   database.transaction(function (tx) {
     tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
       for (let i = 0; i < result.rows.length; i += 1) {
@@ -68,6 +69,7 @@ function createDB() {
   })
 }
 
+// PAGE TABLE NODES CREATION
 function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   const row = document.createElement('tr')
   const idCell = document.createElement('td')
@@ -81,7 +83,7 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   const editBtn = document.createElement('button')
   const delBtn = document.createElement('button')
 
-  // row.setAttribute('scope', 'row'))
+  // SETTIN NODES ATTRIBUTES
   idCell.setAttribute('id', `idCell-${id}`)
   datesCell.setAttribute('id', `datesCell-${id}`)
   supplierCell.setAttribute('id', `supplierCell-${id}`)
@@ -94,6 +96,7 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   delBtn.setAttribute('class', 'delBtn')
   delBtn.setAttribute('type', 'button')
 
+  // SETTIN NODES CONTENT
   idCell.textContent = id
   datesCell.textContent = dates
   supplierCell.textContent = supplier
@@ -113,6 +116,7 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
 </svg>`
 
+  // APPENDING NODES INTO TABLE ROWS
   row.appendChild(idCell)
   row.appendChild(datesCell)
   row.appendChild(supplierCell)
@@ -126,6 +130,7 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
 
   document.getElementById('table').appendChild(row)
 
+  // EVENT HANDLERS INITIALIZATION
   setTimeout(() => {
     table.onclick = function (event) {
       let target = event.target
@@ -193,6 +198,7 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
 
 const table = document.getElementById('table')
 
+// UTILITY FUNCTION FOR FOT COLUMN SORTING
 function replacementRow(
   id,
   dates,
@@ -226,6 +232,7 @@ function replacementRow(
 
 let condition = true
 
+// SORTING FUNCTION
 const sortByColumn = (idAttribute) => {
   condition = !condition
   let selectText
@@ -254,6 +261,7 @@ const sortByColumn = (idAttribute) => {
   })
 }
 
+// UTILITY FUNCTION FOR UPDATING TABLE ROWS
 const removeRows = () => {
   const tableColl = table.getElementsByTagName('tr')
   for (let i = tableColl.length - 1; i > 0; i -= 1) {
@@ -261,6 +269,7 @@ const removeRows = () => {
   }
 }
 
+// FUNCTION FOR ENTRIES COPYING
 const copyEntry = (string) => {
   const newStr = "'" + `${string}` + "'"
   database.transaction(function (tx) {
@@ -288,6 +297,7 @@ const copyEntry = (string) => {
   })
 }
 
+// FUNCTION FOR ENTRIES EDITING
 const editEntry = (arr) => {
   dateInput.value = arr[0]
   supplierInput.value = arr[1]
@@ -297,6 +307,7 @@ const editEntry = (arr) => {
   sumInput.value = arr[5]
 }
 
+// FUNCTION FOR ENTRIES DELITING
 const delEntry = () => {
   database.transaction(function (tx) {
     tx.executeSql(`DELETE FROM dataTable WHERE id='${updatedId}'`)
@@ -325,14 +336,13 @@ const delEntry = () => {
   })
 }
 
+// FUNCTION FOR ADDING NEW ENTRIES
 const addEntry = () => {
   database.transaction(function (tx) {
     tx.executeSql(
       `INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES ('${dateInput.value}', '${supplierInput.value}', '${warehouseInput.value}', '${productInput.value}', '${quantityInput.value}', '${sumInput.value}')`
     )
   })
-
-  ridInputs()
 
   removeRows()
 
@@ -354,6 +364,7 @@ const addEntry = () => {
   })
 }
 
+// FUNCTION FOR THE FIELDS CLEANUP
 function ridInputs() {
   dateInput.value = ''
   supplierInput.value = ''
@@ -402,6 +413,7 @@ const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
   }
 })
 
+// FUNCTION FOR THE TABLE PRINTING
 function printData() {
   setTimeout(() => {
     const newWin = window.open('')
@@ -411,6 +423,7 @@ function printData() {
   }, 20)
 }
 
+// INITIAL FUNCTION
 const initializeDB = (() => {
   let executed = false
   return () => {

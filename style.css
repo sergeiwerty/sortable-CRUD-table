@@ -1,11 +1,6 @@
-tr {
-  border-bottom: 1px solid grey !important;
-}
-
 svg {
   width: 32px;
   height: 32px;
-  /* pointer-events: none; */
 }
 
 svg,
@@ -28,13 +23,28 @@ svg path {
   margin-left: auto;
 }
 
-#updateEntryBtn,
-#undoUpdateBtn {
-  /* visibility: hidden; */
+table button {
+  width: 33.3%;
+}
+
+table tr {
+  border-bottom: 1px solid gray;
+}
+
+table th {
+  border-right: 1px solid gray;
 }
 
 .btn-wrapper {
   margin-bottom: 35px;
+}
+
+.btn-wrapper button {
+  width: 45%;
+}
+
+.hideBtn {
+  display: none;
 }
 
 .printBtn-container {
@@ -42,29 +52,4 @@ svg path {
   display: flex;
   width: 80%;
   align-items: center;
-}
-
-.clicked {
-  /* display: none; */
-  visibility: hidden;
-  /* color: red; */
-}
-
-button {
-  margin: 1em;
-}
-
-table button {
-  width: 33.3%;
-}
-
-#updateEntryBtn.toggler,
-#undoUpdateBtn.toggler {
-  visibility: visible;
-  /* display: flex;
-  justify-content: space-between; */
-}
-
-.hideBtn {
-  display: none;
 }

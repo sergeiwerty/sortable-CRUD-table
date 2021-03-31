@@ -13,13 +13,26 @@
     />
     <title>Ixora db</title>
   </head>
-  <body class="vsc-initialized">
-    <!-- <input
-      type="button"
-      name="btn7"
-      class="btn"
-      value="Посмотреть содержимое таблицы"
-    /> -->
+  <body>
+
+    <!-- <form action="" class="adding-form">
+      <label>Дата<input type="text" id="date-input" /></label>
+      <label
+        >Наименование поставщика<input type="text" id="supplier-input"
+      /></label>
+      <label>Склад приёмки<input type="text" id="warehouse-input" /></label>
+      <label>Наименование товара<input type="text" id="product-input" /></label>
+      <label>Количество<input type="text" id="quantity-input" /></label>
+      <label>Сумма<input type="text" id="sum-input" /></label>
+      <button type="button" id="addEntryBtn">Добавить строку</button>
+      <div class="btn-wrapper">
+        <button id="updateEntryBtn" type="button">Отредактировать</button>
+      </div>
+    </form>
+    <div class="right-column">
+      <button type="button" id="printBtn">Распечатать таблицу</button>
+    </div> -->
+
     <div class="d-flex justify-content-center">
       <div class="form-group w-50">
         <form action="" class="adding-form w-100 pt-4">
@@ -56,11 +69,9 @@
             <button type="button" id="addEntryBtn" class="btn btn-success m-3">Добавить строку</button>
             <button id="updateEntryBtn" type="button" class="btn btn-info m-3">Отредактировать</button>
           </div>
-          <div>
-            
+          <div>  
           </div>
         </form>
-
       </div>
     </div>
 
@@ -68,7 +79,7 @@
       <button type="button" id="printBtn" class="btn btn-dark m-3">Распечатать таблицу</button>
     </div>
 
-    <table id="table" border="1" cellspacing="0" style="width: 80%; margin: 0 auto  auto" class="table table-hover table-light" >
+    <table id="table" border="1" cellspacing="0" style="width: 80%; margin: 0 auto  50px auto" class="table table-hover table-light">
       <th>Id</th>
       <th>Дата</th>
       <th>Наименование поставщика</th>
