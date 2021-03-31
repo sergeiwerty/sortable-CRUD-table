@@ -1,7 +1,23 @@
 import { tableData } from './data.js'
+
 const { dates, supplier, warehouse, productName, quantity, sum } = tableData
-// const database = openDatabase('ixoraDB', '0.1', 'Ixora test database', 100000)
+
+const dateInput = document.getElementById('date-input')
+const supplierInput = document.getElementById('supplier-input')
+const warehouseInput = document.getElementById('warehouse-input')
+const productInput = document.getElementById('product-input')
+const quantityInput = document.getElementById('quantity-input')
+const sumInput = document.getElementById('sum-input')
+
+const btnWrapper = document.querySelector('.btn-wrapper')
+const updateEntryBtn = document.getElementById('updateEntryBtn')
+const undoUpdateBtn = document.getElementById('undoUpdateBtn')
+
+const addEntryBtn = document.getElementById('addEntryBtn')
+
 const database = openDatabase('db', '1.0', 'Ixora DB', 1000000)
+
+let updatedId = null
 
 function createDB() {
   // table creation
@@ -60,6 +76,8 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   const quantityCell = document.createElement('td')
   const sumCell = document.createElement('td')
   const copyBtn = document.createElement('button')
+  const editBtn = document.createElement('button')
+  const delBtn = document.createElement('button')
 
   idCell.setAttribute('id', `idCell-${id}`)
   datesCell.setAttribute('id', `datesCell-${id}`)
@@ -69,7 +87,8 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   quantityCell.setAttribute('id', `quantityCell-${id}`)
   sumCell.setAttribute('id', `sumCell-${id}`)
   copyBtn.setAttribute('class', 'copyBtn')
-  // copyBtn.setAttribute('onclick', 'copyFn()')
+  editBtn.setAttribute('class', 'editBtn')
+  delBtn.setAttribute('class', 'delBtn')
 
   idCell.textContent = id
   datesCell.textContent = dates
@@ -82,6 +101,13 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   <path pointer-events="fill" d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
   <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
 </svg>`
+  editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+    <path pointer-events="fill" d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+  </svg>`
+  delBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+  <path pointer-events="fill" d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+</svg>`
 
   row.appendChild(idCell)
   row.appendChild(datesCell)
@@ -91,6 +117,8 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   row.appendChild(quantityCell)
   row.appendChild(sumCell)
   row.appendChild(copyBtn)
+  row.appendChild(editBtn)
+  row.appendChild(delBtn)
 
   document.getElementById('table').appendChild(row)
 
@@ -104,13 +132,64 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
     const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
       item.onclick = function (event) {
         const elements = Array.from(event.target.parentElement.children)
+        console.log(elements)
         const c = (acc, node) => {
           acc.push(node.textContent)
           return acc
         }
-        copyEntry(elements.reduce(c, []).slice(1, -1).join("', '"))
+        copyEntry(elements.reduce(c, []).slice(1, -3).join("', '"))
       }
     })
+
+    addEntryBtn.onclick = function () {
+      // updateEntryBtn.classList.add('clicked')
+      // undoUpdateBtn.classList.add('clicked')
+      addEntry()
+    }
+
+    const editBtn = document.querySelectorAll('.editBtn').forEach((item) => {
+      item.addEventListener('click', (event) => {
+        const elements = Array.from(event.target.parentElement.children)
+        const c = (acc, node) => {
+          acc.push(node.textContent)
+          return acc
+        }
+        updatedId = elements.reduce(c, [])[0]
+        editEntry(elements.reduce(c, []).slice(1, -1))
+      })
+
+      item.addEventListener('click', () => {
+        // console.log(addEntryBtn.classList.contains('hide-btn'))
+        addEntryBtn.classList.toggle('toggler')
+        updateEntryBtn.classList.toggle('toggler')
+
+        // const updateEntryBtn = document.getElementById('updateEntryBtn')
+        // const undoUpdateBtn
+
+        // console.log(addEntryBtn.classList.contains('hide-wrapper'))
+        // btnWrapper.classList.toggle('hide-wrapper')
+      })
+
+      //!!!!! item.onclick = function (event) {
+      //   const elements = Array.from(event.target.parentElement.children)
+      //   const c = (acc, node) => {
+      //     acc.push(node.textContent)
+      //     return acc
+      //   }
+      //   editEntry(elements.reduce(c, []).slice(1, -1))
+      // }
+    })
+
+    // console.log(updateEntryBtn)
+    updateEntryBtn.onclick = function () {
+      updateEntry()
+    }
+
+    // editBtn.forEach((item) => {
+    //   item.addEventListener('click', () => {
+    //     addEntryBtn.classList.add('hide-btn')
+    //   })
+    // })
   }, 10)
 }
 
@@ -150,6 +229,7 @@ function replacementRow(
 let condition = true
 
 const sortByColumn = (idAttribute) => {
+  console.log(idAttribute)
   condition = !condition
   let selectText
   if (condition) {
@@ -179,49 +259,22 @@ const sortByColumn = (idAttribute) => {
 
 const removeRows = () => {
   const tableColl = table.getElementsByTagName('tr')
-  // console.log(tableColl.slice(1))
-  // console.log(tableColl.length)
-  // const collArray = Array.from(tableColl)
-  // console.log(collArray.length)
   for (let i = tableColl.length - 1; i > 0; i -= 1) {
     tableColl[1].parentNode.removeChild(tableColl[1])
-    console.log(tableColl)
+    // console.log(tableColl)
   }
 
-  console.log(tableColl)
+  // console.log(tableColl)
 }
 
 const copyEntry = (string) => {
   // ("'" + `${string}` + "'")
-  const newStr = "'" + `${string}` + "'"
-  console.log(typeof newStr)
-  console.log(newStr)
 
-  //   console.log(string.forEach((word) => {
-  // `'${word},'`
-  //   }))
-  // INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES (${newStr})
+  const newStr = "'" + `${string}` + "'"
   database.transaction(function (tx) {
+    console.log(newStr)
     tx.executeSql(
       `INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES (${newStr})`
-      // 'SELECT DISTINCT date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo FROM dataTable',
-      // [],
-      // function (tx, result) {
-      //   for (let i = 0; i < result.rows.length; i += 1) {
-      //     let item = result.rows.item(i)
-      //     let index = i + 1
-      //     outRow(
-      //       item.id,
-      //       item.date,
-      //       item.supplierName,
-      //       item.warehouseInfo,
-      //       item.productInfo,
-      //       item.quantityInfo,
-      //       item.sumInfo,
-      //       index
-      //     )
-      //   }
-      // }
     )
   })
   removeRows()
@@ -242,43 +295,125 @@ const copyEntry = (string) => {
       }
     })
   })
-  // console.log(outRow)
-  // outRow()
-  // createDB()
 }
 
-// createDB()
-// copyEntry()
+const editEntry = (arr) => {
+  // console.log(string)
+  dateInput.value = arr[0]
+  // console.log(dateInput.value)
+  supplierInput.value = arr[1]
+  warehouseInput.value = arr[2]
+  productInput.value = arr[3]
+  quantityInput.value = arr[4]
+  sumInput.value = arr[5]
+}
 
-// setTimeout(() => {
-//   const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
-//     item.addEventListener('click', (cb) => {
-//       console.log(Array.from(event.target.parentElement.children))
-//       const elements = Array.from(event.target.parentElement.children)
-//       const c = (acc, node) => {
-//         // console.log(node.textContent)
-//         acc.push(node.textContent)
-//         return acc
-//       }
-//       console.log(elements.reduce(c, []).slice(1, -1).join(', '))
-//       copyEntry()
-//       // console.log(elements[1].textContent)
-//     })
+// const dateInput = document.getElementById('date-input')
+// console.log(dateInput.value)
+
+const addEntry = () => {
+  database.transaction(function (tx) {
+    tx.executeSql(
+      `INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES ('${dateInput.value}', '${supplierInput.value}', '${warehouseInput.value}', '${productInput.value}', '${quantityInput.value}', '${sumInput.value}')`
+    )
+  })
+
+  removeRows()
+
+  database.transaction(function (tx) {
+    tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
+      for (let i = 0; i < result.rows.length; i += 1) {
+        let item = result.rows.item(i)
+        outRow(
+          item.id,
+          item.date,
+          item.supplierName,
+          item.warehouseInfo,
+          item.productInfo,
+          item.quantityInfo,
+          item.sumInfo
+        )
+      }
+    })
+  })
+}
+
+function ridInputs() {
+  dateInput.value = ''
+  supplierInput.value = ''
+  warehouseInput.value = ''
+  productInput.value = ''
+  quantityInput.value = ''
+  sumInput.value = ''
+}
+////////////////////////////////////////
+const updateEntry = () => {
+  database.transaction(function (tx) {
+    tx.executeSql(
+      `UPDATE dataTable SET date='${dateInput.value}', supplierName='${supplierInput.value}', warehouseInfo='${warehouseInput.value}', productInfo='${productInput.value}', quantityInfo='${quantityInput.value}', sumInfo='${sumInput.value}' WHERE id='${updatedId}'`
+    )
+  })
+
+  removeRows()
+  setTimeout(() => ridInputs(), 20)
+
+  database.transaction(function (tx) {
+    tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
+      for (let i = 0; i < result.rows.length; i += 1) {
+        let item = result.rows.item(i)
+        outRow(
+          item.id,
+          item.date,
+          item.supplierName,
+          item.warehouseInfo,
+          item.productInfo,
+          item.quantityInfo,
+          item.sumInfo
+        )
+      }
+    })
+  })
+}
+///////////////////////////////////////
+
+// const updateEntry = () => {
+//   database.transaction(function (tx) {
+//     tx.executeSql(
+//       'UPDATE dataTable SET date=?, supplierName=?, warehouseInfo=?, productInfo=?, quantityInfo=?, sumInfo=? WHERE id=?',
+//       [
+//         `'${dateInput.value}', '${supplierInput.value}', '${warehouseInput.value}', '${productInput.value}', '${quantityInput.value}', '${sumInput.value}', '${updatedId}') `,
+//       ]
+//     )
 //   })
-// }, 200)
+//   console.log('чтд')
+// }
+//
+//
+//
 
-// copyBtn.addEventListener
+// ('${dateInput.value}', '${supplierInput.value}', '${warehouseInput.value}', '${productInput.value}', '${quantityInput.value}', '${sumInput.value}')`
 
-// const createDbBtn = document.getElementById('createDbBtn')
-// setTimeout(
-//   // (createDbBtn.onclick = function () {
-//   //   // copyEntry()
-//   //   removeRows()
-//   //   // createDB()
-//   // }),
-//   (createDbBtn.onclick = createDB),
-//   200
-// )
+// btn_update.click(() => {
+//   db.transaction((tx) => {
+//     var sql = 'UPDATE items SET productname=?,price=? WHERE id=?'
+
+//     tx.executeSql(
+//       sql,
+//       [product_name.val(), price.val(), p_id],
+//       () => {
+//         alert('Row Updated')
+//       },
+//       (tx, err) => {
+//         alert('Failed to update\n' + err.message)
+//       }
+//     )
+//   })
+//   btn_update.hide()
+//   btn_read.show()
+//   btn_cancel.hide()
+//   fetchData()
+// })
+//////////////////
 
 const initializeDB = (() => {
   let executed = false

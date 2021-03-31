@@ -14,14 +14,20 @@
       class="btn"
       value="Посмотреть содержимое таблицы"
     /> -->
-    <form action="">
-      <label>Дата<input type="text" /></label>
-      <label>Наименование поставщика<input type="text" /></label>
-      <label>Склад приёмки<input type="text" /></label>
-      <label>Наименование товара<input type="text" /></label>
-      <label>Количество<input type="text" /></label>
-      <label>Сумма<input type="text" /></label>
-      <button type="submit">Добавить строку</button>
+    <form action="" class="adding-form">
+      <label>Дата<input type="text" id="date-input" /></label>
+      <label
+        >Наименование поставщика<input type="text" id="supplier-input"
+      /></label>
+      <label>Склад приёмки<input type="text" id="warehouse-input" /></label>
+      <label>Наименование товара<input type="text" id="product-input" /></label>
+      <label>Количество<input type="text" id="quantity-input" /></label>
+      <label>Сумма<input type="text" id="sum-input" /></label>
+      <button type="button" id="addEntryBtn">Добавить строку</button>
+      <div class="btn-wrapper">
+        <button id="updateEntryBtn" type="button">Отредактировать</button
+        ><button id="undoUpdateBtn" type="button">Отменить</button>
+      </div>
     </form>
     <button type="button" id="createDbBtn" style="margin-top: 30px">
       обновить таблицу

@@ -4,6 +4,44 @@ svg {
   /* pointer-events: none; */
 }
 
-svg {
+svg,
+svg path {
   pointer-events: none;
+}
+
+.adding-form {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+
+.adding-form label {
+  display: flex;
+  margin-bottom: 1em;
+}
+
+.adding-form input {
+  margin-left: auto;
+}
+
+#updateEntryBtn,
+#undoUpdateBtn {
+  /* visibility: hidden; */
+}
+
+.btn-wrapper button {
+  width: 45%;
+}
+
+.clicked {
+  /* display: none; */
+  visibility: hidden;
+  /* color: red; */
+}
+
+#updateEntryBtn.toggler,
+#undoUpdateBtn.toggler {
+  visibility: visible;
+  /* display: flex;
+  justify-content: space-between; */
 }
