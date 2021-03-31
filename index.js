@@ -69,10 +69,8 @@ function createDB() {
 }
 
 function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
-  console.log('hahahah')
   const row = document.createElement('tr')
   const idCell = document.createElement('td')
-  console.log(idCell)
   const datesCell = document.createElement('td')
   const supplierCell = document.createElement('td')
   const warehouseCell = document.createElement('td')
@@ -83,8 +81,8 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   const editBtn = document.createElement('button')
   const delBtn = document.createElement('button')
 
+  // row.setAttribute('scope', 'row'))
   idCell.setAttribute('id', `idCell-${id}`)
-  console.log(idCell)
   datesCell.setAttribute('id', `datesCell-${id}`)
   supplierCell.setAttribute('id', `supplierCell-${id}`)
   warehouseCell.setAttribute('id', `warehouseCell-${id}`)
@@ -97,7 +95,6 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
   delBtn.setAttribute('type', 'button')
 
   idCell.textContent = id
-  console.log(idCell.textContent)
   datesCell.textContent = dates
   supplierCell.textContent = supplier
   warehouseCell.textContent = warehouse
@@ -133,13 +130,11 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
     table.onclick = function (event) {
       let target = event.target
       if (target.tagName !== 'TH') return
-      // console.log(event.target.getAttribute('id'))
       sortByColumn(event.target.getAttribute('id'))
     }
     const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
       item.onclick = function (event) {
         const elements = Array.from(event.target.parentElement.children)
-        console.log(elements)
         const c = (acc, node) => {
           acc.push(node.textContent)
           return acc
@@ -181,8 +176,6 @@ function outRow(id, dates, supplier, warehouse, productName, quantity, sum) {
           return acc
         }
         updatedId = elements.reduce(c, [])[0]
-        console.log(updatedId)
-        // editEntry(elements.reduce(c, []).slice(1, -1))
       })
     })
 
@@ -212,7 +205,6 @@ function replacementRow(
 ) {
   setTimeout(() => {
     const idCell = document.getElementById(`idCell-${counter}`)
-    console.log(idCell)
     const datesCell = document.getElementById(`datesCell-${counter}`)
     const supplierCell = document.getElementById(`supplierCell-${counter}`)
     const warehouseCell = document.getElementById(`warehouseCell-${counter}`)
@@ -222,7 +214,6 @@ function replacementRow(
     const quantityCell = document.getElementById(`quantityCell-${counter}`)
     const sumCell = document.getElementById(`sumCell-${counter}`)
 
-    console.log(idCell.textContent)
     idCell.textContent = id
     datesCell.textContent = dates
     supplierCell.textContent = supplier
@@ -236,7 +227,6 @@ function replacementRow(
 let condition = true
 
 const sortByColumn = (idAttribute) => {
-  console.log(idAttribute)
   condition = !condition
   let selectText
   if (condition) {
@@ -248,7 +238,6 @@ const sortByColumn = (idAttribute) => {
     tx.executeSql(`${selectText}`, [], function (tx, result) {
       for (let i = 0; i < result.rows.length; i += 1) {
         let item = result.rows.item(i)
-        console.log(item)
         let index = i + 1
         replacementRow(
           item.id,
@@ -275,7 +264,6 @@ const removeRows = () => {
 const copyEntry = (string) => {
   const newStr = "'" + `${string}` + "'"
   database.transaction(function (tx) {
-    console.log(newStr)
     tx.executeSql(
       `INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES (${newStr})`
     )
@@ -311,7 +299,6 @@ const editEntry = (arr) => {
 
 const delEntry = () => {
   database.transaction(function (tx) {
-    console.log(`${updatedId}`)
     tx.executeSql(`DELETE FROM dataTable WHERE id='${updatedId}'`)
   })
 
@@ -319,15 +306,10 @@ const delEntry = () => {
 
   database.transaction(function (tx) {
     tx.executeSql('SELECT * from dataTable', [], function (tx, result) {
-      console.log(result)
-
       let length = result.rows.length
 
       for (let i = 0; i < result.rows.length; i += 1) {
         let item = result.rows.item(i)
-        console.log(length)
-
-        console.log(item)
 
         outRow(
           item.id,
@@ -349,6 +331,8 @@ const addEntry = () => {
       `INSERT INTO dataTable (date, supplierName, warehouseInfo, productInfo, quantityInfo, sumInfo) VALUES ('${dateInput.value}', '${supplierInput.value}', '${warehouseInput.value}', '${productInput.value}', '${quantityInput.value}', '${sumInput.value}')`
     )
   })
+
+  ridInputs()
 
   removeRows()
 
@@ -378,7 +362,7 @@ function ridInputs() {
   quantityInput.value = ''
   sumInput.value = ''
 }
-////////////////////////////////////////
+
 const updateEntry = () => {
   database.transaction(function (tx) {
     tx.executeSql(
@@ -405,16 +389,11 @@ const updateEntry = () => {
       }
     })
   })
-
-  // $('button').on('click', function () {
-  //   printData()
-  // })
 }
 
 const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
   item.onclick = function (event) {
     const elements = Array.from(event.target.parentElement.children)
-    console.log(elements)
     const c = (acc, node) => {
       acc.push(node.textContent)
       return acc
@@ -424,21 +403,12 @@ const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
 })
 
 function printData() {
-  document.querySelectorAll('.copyBtn').forEach((item) => {
-    item.classList.add('hideBtn')
-  })
-
-  // addEntryBtn.classList.add('hideBtn')
   setTimeout(() => {
     const newWin = window.open('')
     newWin.document.write(renderedTable.outerHTML)
     newWin.print()
     newWin.close()
   }, 20)
-  // const newWin = window.open('')
-  // newWin.document.write(renderedTable.outerHTML)
-  // newWin.print()
-  // newWin.close()
 }
 
 const initializeDB = (() => {
