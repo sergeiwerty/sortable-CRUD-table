@@ -23,12 +23,75 @@ svg path {
   margin-left: auto;
 }
 
-table button {
-  width: 33.3%;
+table {
+  /* border: none; */
+  border-left: none;
+  border-right: none;
 }
 
-table tr {
+table button {
+  box-sizing: border-box;
+  width: 30%;
+}
+
+.table {
+  box-shadow: 20px 0 20px -20px #edeef7;
+}
+
+.table tr {
+  border-bottom: #b8b5ff;
+}
+
+table.table-bordered tr:nth-of-type(even) {
+  background-color: #edeef7;
+}
+
+.table tr:last-of-type {
+  border-bottom: 2px solid #b8b5ff;
+}
+
+.table tbody tr:last-of-type {
+  vertical-align: middle;
+  border-bottom: none;
+}
+
+.table th {
+  border: none;
+}
+
+.table th:first-of-type {
+  border-radius: 5px 0 0 0;
+}
+
+.table th:last-of-type {
+  border-radius: 0 5px 0 0;
+}
+
+th {
+  /* font-weight: normal; */
+
+  font-size: 1.2em;
+  text-align: left;
+}
+
+.table tbody th {
+  padding: 5px 12px;
+}
+
+td {
+  padding: 10px 12px;
+}
+
+td:nth-of-type(2) {
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  font-family: 'Lato', sans-serif;
+
   border-bottom: 1px solid gray;
+  background-color: #7868e6;
+  color: #fff;
 }
 
 table th {
@@ -52,4 +115,11 @@ table th {
   display: flex;
   width: 80%;
   align-items: center;
+}
+
+.copyBtn,
+.editBtn,
+.delBtn {
+  padding-bottom: 5px;
+  padding-top: 6px;
 }

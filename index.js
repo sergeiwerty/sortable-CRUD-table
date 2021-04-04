@@ -101,9 +101,15 @@ function outRow(
   productNameCell.setAttribute('id', `productNameCell-${index}`)
   quantityCell.setAttribute('id', `quantityCell-${index}`)
   sumCell.setAttribute('id', `sumCell-${index}`)
+
   copyBtn.setAttribute('class', 'copyBtn')
+  copyBtn.classList.add('btn', 'btn-success', 'p-0')
+
   editBtn.setAttribute('class', 'editBtn')
+  editBtn.classList.add('btn', 'btn-primary', 'p-0', 'm-1')
+
   delBtn.setAttribute('class', 'delBtn')
+  delBtn.classList.add('btn', 'btn-danger', 'p-0')
   delBtn.setAttribute('type', 'button')
 
   // SETTIN NODES CONTENT

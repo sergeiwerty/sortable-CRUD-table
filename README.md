@@ -4,7 +4,7 @@
 
 ## Description
 
-This is a demo project with basic functionality supporting adding, copying, deliting, editing data table entries. Alos implemented sorting by columns. As database used web SQL
+This is a demo project with basic functionality supporting adding, copying, deliting, editing data table entries. Also implemented sorting by columns. As database used web SQL
 
 ## Development tools used
 
