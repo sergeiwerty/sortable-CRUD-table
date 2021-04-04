@@ -1,93 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
-      crossorigin="anonymous"
-    />
-    <title>Ixora db</title>
-  </head>
-  <body>
 
-    <!-- <form action="" class="adding-form">
-      <label>Дата<input type="text" id="date-input" /></label>
-      <label
-        >Наименование поставщика<input type="text" id="supplier-input"
-      /></label>
-      <label>Склад приёмки<input type="text" id="warehouse-input" /></label>
-      <label>Наименование товара<input type="text" id="product-input" /></label>
-      <label>Количество<input type="text" id="quantity-input" /></label>
-      <label>Сумма<input type="text" id="sum-input" /></label>
-      <button type="button" id="addEntryBtn">Добавить строку</button>
-      <div class="btn-wrapper">
-        <button id="updateEntryBtn" type="button">Отредактировать</button>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
+  <title>Ixora db</title>
+</head>
+
+<body>
+  <div class="d-flex justify-content-center">
+    <div class="form-group w-50">
+      <form action="" class="adding-form w-100 pt-4">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="date-input" class="pb-0">Дата</label>
+            <input type="text" id="date-input" class="form-control pt-0" />
+          </div>
+          <div class="col">
+            <label for="supplier-input" class="pb-0">Наименование поставщика</label>
+            <input type="text" id="supplier-input" class="form-control pt-0" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="warehouse-input" class="pb-0">Склад приёмки</label>
+            <input type="text" id="warehouse-input" class="form-control pt-0" />
+          </div>
+          <div class="col">
+            <label for="product-input" class="pb-0">Наименование товара</label>
+            <input type="text" id="product-input" class="form-control pt-0" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="quantity-input" class="pb-0">Количество</label>
+            <input type="text" id="quantity-input" class="form-control pt-0" />
+          </div>
+          <div class="col">
+            <label for="sum-input" class="pb-0">Сумма</label>
+            <input type="text" id="sum-input" class="form-control pt-0" />
+          </div>
+        </div>
+        <button type="button" id="addEntryBtn" class="btn btn-success m-3">Добавить строку</button>
+        <button id="updateEntryBtn" type="button" class="btn btn-info m-3">Отредактировать</button>
+    </div>
+    <div>
+    </div>
     </form>
-    <div class="right-column">
-      <button type="button" id="printBtn">Распечатать таблицу</button>
-    </div> -->
+  </div>
+  </div>
 
-    <div class="d-flex justify-content-center">
-      <div class="form-group w-50">
-        <form action="" class="adding-form w-100 pt-4">
-          <div class="row mb-3">
-            <div class="col">
-              <label for="date-input" class="pb-0">Дата</label>
-              <input type="text" id="date-input" class="form-control pt-0" />
-            </div>
-            <div class="col">
-              <label for="supplier-input" class="pb-0">Наименование поставщика</label>
-              <input type="text" id="supplier-input" class="form-control pt-0" />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col">
-              <label for="warehouse-input" class="pb-0">Склад приёмки</label>
-              <input type="text" id="warehouse-input" class="form-control pt-0" />
-            </div>
-            <div class="col">
-              <label for="product-input"  class="pb-0">Наименование товара</label>
-              <input type="text" id="product-input" class="form-control pt-0" />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col">
-              <label for="quantity-input" class="pb-0">Количество</label>
-              <input type="text" id="quantity-input" class="form-control pt-0" />
-            </div>
-            <div class="col">
-                  <label for="sum-input" class="pb-0">Сумма</label>
-              <input type="text" id="sum-input" class="form-control pt-0" />
-            </div>
-          </div>
-            <button type="button" id="addEntryBtn" class="btn btn-success m-3">Добавить строку</button>
-            <button id="updateEntryBtn" type="button" class="btn btn-info m-3">Отредактировать</button>
-          </div>
-          <div>  
-          </div>
-        </form>
-      </div>
-    </div>
+  <div class="printBtn-container">
+    <button type="button" id="printBtn" class="btn btn-dark m-3">Распечатать таблицу</button>
+  </div>
 
-    <div class="printBtn-container">
-      <button type="button" id="printBtn" class="btn btn-dark m-3">Распечатать таблицу</button>
-    </div>
+  <table id="table" border="1" cellspacing="0" style="width: 80%; margin: 0 auto  50px auto"
+    class="table table-hover table-light">
+    <th>Id</th>
+    <th>Дата</th>
+    <th>Наименование поставщика</th>
+    <th>Склад приёмки</th>
+    <th>Наименование товара</th>
+    <th>Количество</th>
+    <th>Сумма</th>
+  </table>
+  <script type="module" src="index.js"></script>
+</body>
 
-    <table id="table" border="1" cellspacing="0" style="width: 80%; margin: 0 auto  50px auto" class="table table-hover table-light">
-      <th>Id</th>
-      <th>Дата</th>
-      <th>Наименование поставщика</th>
-      <th>Склад приёмки</th>
-      <th>Наименование товара</th>
-      <th>Количество</th>
-      <th>Сумма</th>
-    </table>
-    <script type="module" src="index.js"></script>
-  </body>
 </html>
