@@ -3,7 +3,7 @@ import { tableData } from './data.js'
 const { dates, supplier, warehouse, productName, quantity, sum } = tableData
 
 // VARIABLES INITIALIZATION
-const renderedTable = document.getElementById('table')
+let renderedTable = document.getElementById('table')
 
 const dateInput = document.getElementById('date-input')
 const supplierInput = document.getElementById('supplier-input')
@@ -417,7 +417,7 @@ const updateEntry = () => {
   })
 }
 
-const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
+const copybtn = document.querySelectorAll('.copyBtn').forEach((item) => {
   item.onclick = function (event) {
     const elements = Array.from(event.target.parentElement.children)
     const c = (acc, node) => {
@@ -429,13 +429,16 @@ const copyBtn = document.querySelectorAll('.copyBtn').forEach((item) => {
 })
 
 // FUNCTION FOR THE TABLE PRINTING
-function printData() {
-  setTimeout(() => {
-    const newWin = window.open('')
-    newWin.document.write(renderedTable.outerHTML)
-    newWin.print()
-    newWin.close()
-  }, 20)
+const printData = () => {
+  const originalContent = document.cloneNode(true)
+
+  originalContent.querySelectorAll('.btn').forEach((item) => item.remove())
+  const printableTable = originalContent.getElementById('table')
+
+  const newWin = window.open('')
+  newWin.document.write(printableTable.outerHTML)
+  newWin.print()
+  newWin.close()
 }
 
 // INITIAL FUNCTION

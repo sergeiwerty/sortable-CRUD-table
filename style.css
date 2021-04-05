@@ -24,7 +24,6 @@ svg path {
 }
 
 table {
-  /* border: none; */
   border-left: none;
   border-right: none;
 }
@@ -68,8 +67,6 @@ table.table-bordered tr:nth-of-type(even) {
 }
 
 th {
-  /* font-weight: normal; */
-
   font-size: 1.2em;
   text-align: left;
 }
